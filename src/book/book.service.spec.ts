@@ -155,7 +155,7 @@ describe('BookService', () => {
       const result = await bookService.deleteById(mockBook._id);
 
       expect(model.findByIdAndDelete).toHaveBeenCalledWith(mockBook._id);
-      expect(result).toEqual(mockBook);
+      expect(result).toEqual({ deleted: true });
     });
   });
 });
