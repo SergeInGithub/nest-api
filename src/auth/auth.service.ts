@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
@@ -20,15 +24,20 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await this.userModel.create({
-      name,
-      email,
-      password: hashedPassword,
-    });
+    try {
+      const user = await this.userModel.create({
+        name,
+        email,
+        password: hashedPassword,
+      });
 
-    const token = this.jwtService.sign({ id: user._id });
-
-    return { token };
+      const token = this.jwtService.sign({ id: user._id });
+      return { token };
+    } catch (error) {
+      if (error?.code === 11000) {
+        throw new ConflictException('Duplicate Email entered');
+      }
+    }
   }
 
   async login(loginDto: LoginDto): Promise<{ token: string }> {

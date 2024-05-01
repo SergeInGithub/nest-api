@@ -23,7 +23,7 @@ describe('BookService', () => {
 
   const mockUser = {
     _id: '61c0ccf11d7bf83d153d7c06',
-    name: '61c0ccf11d7bf83d153d7c06',
+    name: 'test user',
     email: 'testing@gmail.com',
   };
 
